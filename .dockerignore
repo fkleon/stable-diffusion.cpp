@@ -4,3 +4,7 @@ test/
 .cache/
 *.swp
 models/
+outputs/
+
+Dockerfile*
+docker-compose.yml
