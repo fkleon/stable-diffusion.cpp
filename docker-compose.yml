@@ -1,0 +1,52 @@
+x-labels: &labels
+  org.opencontainers.image.source: "https://github.com/leejet/stable-diffusion.cpp"
+  org.opencontainers.image.ref.name: "stable-diffusion.cpp"
+  org.opencontainers.image.revision: "${GIT_SHA}"
+  org.opencontainers.image.version: "${APP_VERSION?error}"
+
+services:
+  sdcpp-rocm64:
+    build:
+      dockerfile: Dockerfile.rocm
+      args:
+        APP_VERSION: ${APP_VERSION:-latest}
+        ROCM_VERSION: "6.4.3"
+        GFX_NAME: gfx1030
+        HSA_OVERRIDE_GFX_VERSION: 10.3.0
+      labels: *labels
+      tags:
+        - "sdcpp:${APP_VERSION}-rocm-6.4"
+    image: sdcpp:rocm-6.4
+    user: "1000"
+    group_add:
+      - video # 44
+      - 132 # render
+    devices:
+      - /dev/dri/renderD129:/dev/dri/renderD129
+      - /dev/kfd:/dev/kfd
+    volumes:
+      - ./outputs/:/outputs
+      - /mnt/tank/models:/models:ro
+
+  sdcpp-rocm70:
+    build:
+      dockerfile: Dockerfile.rocm
+      args:
+        APP_VERSION: ${APP_VERSION:-latest}
+        ROCM_VERSION: "7.0"
+        GFX_NAME: gfx1030
+        HSA_OVERRIDE_GFX_VERSION: 10.3.0
+      labels: *labels
+      tags:
+        - "sdcpp:${APP_VERSION}-rocm-7.0"
+    image: sdcpp:rocm-7.0
+    user: "1000"
+    group_add:
+      - video # 44
+      - 132 # render
+    devices:
+      - /dev/dri/renderD129:/dev/dri/renderD129
+      - /dev/kfd:/dev/kfd
+    volumes:
+      - ./outputs/:/outputs
+      - /mnt/tank/models:/models:ro
