@@ -12,11 +12,8 @@ ENV PATH="/opt/rocm/lib/llvm/bin:$PATH"
 
 WORKDIR /sd.cpp
 COPY . .
-
 ARG GFX_NAME
-RUN mkdir -p build \
-  && cd build \
-  && cmake .. \
+RUN cmake . -B ./build \
     -G "Ninja" \
     -DCMAKE_C_COMPILER=clang \
     -DCMAKE_CXX_COMPILER=clang++ \
@@ -25,8 +22,8 @@ RUN mkdir -p build \
     -DGPU_TARGETS=$GFX_NAME \
     -DAMDGPU_TARGETS=$GFX_NAME \
     -DCMAKE_BUILD_WITH_INSTALL_RPATH=ON \
-    -DCMAKE_POSITION_INDEPENDENT_CODE=ON \
-  && cmake --build . --config Release
+    -DCMAKE_POSITION_INDEPENDENT_CODE=ON
+RUN cmake --build ./build --config Release --parallel
 
 FROM rocm/dev-ubuntu-${UBUNTU_VERSION}:${ROCM_VERSION}-complete AS runtime
 
