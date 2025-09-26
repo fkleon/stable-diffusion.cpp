@@ -50,3 +50,22 @@ services:
     volumes:
       - ./outputs/:/outputs
       - /mnt/tank/models:/models:ro
+
+  sdcpp-vulkan:
+    build:
+      context: .
+      dockerfile: Dockerfile.vulkan
+      labels: *labels
+      tags:
+        - "sdcpp:${APP_VERSION}-vulkan"
+    image: sdcpp:vulkan
+    user: "1000"
+    group_add:
+      - video # 44
+      - 132 # render
+    devices:
+      - /dev/dri/renderD129:/dev/dri/renderD129
+    volumes:
+      - ./.cache/:/.cache # shader cache
+      - ./outputs/:/outputs
+      - /mnt/tank/models:/models:ro
