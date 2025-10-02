@@ -27,6 +27,9 @@ RUN cmake --build ./build --config Release --parallel
 
 FROM rocm/dev-ubuntu-${UBUNTU_VERSION}:${ROCM_VERSION}-complete AS runtime
 
+ARG GFX_NAME
+LABEL amdgpu.rocm.gfx = $GFX_NAME
+
 ARG HSA_OVERRIDE_GFX_VERSION
 ENV HSA_OVERRIDE_GFX_VERSION=$HSA_OVERRIDE_GFX_VERSION
 ENV LD_LIBRARY_PATH=/opt/rocm/lib/llvm/lib
