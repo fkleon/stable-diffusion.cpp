@@ -1,0 +1,39 @@
+ARG UBUNTU_VERSION=24.04
+ARG ROCM_VERSION=6.4.3
+ARG GFX_NAME=gfx1030
+ARG HSA_OVERRIDE_GFX_VERSION=10.3.0
+
+FROM rocm/dev-ubuntu-${UBUNTU_VERSION}:${ROCM_VERSION}-complete AS build
+
+RUN apt-get update && \
+  apt-get install -y build-essential git cmake ccache ninja-build
+
+ENV PATH="/opt/rocm/lib/llvm/bin:$PATH"
+
+WORKDIR /sd.cpp
+COPY . .
+ARG GFX_NAME
+RUN cmake . -B ./build \
+    -G "Ninja" \
+    -DCMAKE_C_COMPILER=clang \
+    -DCMAKE_CXX_COMPILER=clang++ \
+    -DSD_HIPBLAS=ON \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DGPU_TARGETS=$GFX_NAME \
+    -DAMDGPU_TARGETS=$GFX_NAME \
+    -DCMAKE_BUILD_WITH_INSTALL_RPATH=ON \
+    -DCMAKE_POSITION_INDEPENDENT_CODE=ON
+RUN cmake --build ./build --config Release --parallel
+
+FROM rocm/dev-ubuntu-${UBUNTU_VERSION}:${ROCM_VERSION}-complete AS runtime
+
+ARG GFX_NAME
+LABEL amdgpu.rocm.gfx = $GFX_NAME
+
+ARG HSA_OVERRIDE_GFX_VERSION
+ENV HSA_OVERRIDE_GFX_VERSION=$HSA_OVERRIDE_GFX_VERSION
+ENV LD_LIBRARY_PATH=/opt/rocm/lib/llvm/lib
+
+COPY --from=build /sd.cpp/build/bin/sd /sd
+
+ENTRYPOINT ["/sd"]
