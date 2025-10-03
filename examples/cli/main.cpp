@@ -784,6 +784,8 @@ void parse_args(int argc, const char** argv, SDParams& params) {
             return -1;
         }
         params.preview_method = (preview_t)preview_method;
+        return 1;
+    };
 
     auto on_tile_size_arg = [&](int argc, const char** argv, int index) {
         if (++index >= argc) {
