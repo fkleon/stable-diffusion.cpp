@@ -308,7 +308,7 @@ void print_usage(int argc, const char* argv[]) {
     printf("  --canny                            apply canny preprocessor (edge detection)\n");
     printf("  --preview {%s,%s,%s,%s}            preview method. (default is %s(disabled))\n", previews_str[0], previews_str[1], previews_str[2], previews_str[3], previews_str[PREVIEW_NONE]);
     printf("                                     %s is the fastest\n", previews_str[PREVIEW_PROJ]);
-    printf("  --preview-interval [N]             How often to save the image preview");
+    printf("  --preview-interval [N]             How often to save the image preview\n");
     printf("  --preview-path [PATH]              path to write preview image to (default: ./preview.png)\n");
     printf("  --color                            colors the logging tags according to level\n");
     printf("  --chroma-disable-dit-mask          disable dit mask for chroma\n");
