@@ -1135,7 +1135,7 @@ public:
         } else {
             if (preview_mode == PREVIEW_VAE) {
                 process_latent_out(latents);
-                if (vae_tiling) {
+                if (vae_tiling_params.enabled) {
                     // split latent in 32x32 tiles and compute in several steps
                     auto on_tiling = [&](ggml_tensor* in, ggml_tensor* out, bool init) {
                         first_stage_model->compute(n_threads, in, true, &out, NULL);
@@ -1154,7 +1154,7 @@ public:
                     LOG_WARN("TAE not found for preview");
                     return;
                 }
-                if (vae_tiling) {
+                if (vae_tiling_params.enabled) {
                     // split latent in 64x64 tiles and compute in several steps
                     auto on_tiling = [&](ggml_tensor* in, ggml_tensor* out, bool init) {
                         tae_first_stage->compute(n_threads, in, true, &out, NULL);
