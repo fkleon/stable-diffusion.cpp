@@ -63,6 +63,8 @@ services:
     <<: *defaults
     build:
       dockerfile: Dockerfile.vulkan
+      args:
+        VULKANSDK_VERSION: 1.4.328.1
       labels: *labels
       tags:
         - "sdcpp:${APP_VERSION}-vulkan"
