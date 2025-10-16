@@ -1,0 +1,75 @@
+x-labels: &labels
+  org.opencontainers.image.source: "https://github.com/leejet/stable-diffusion.cpp"
+  org.opencontainers.image.ref.name: "stable-diffusion.cpp"
+  org.opencontainers.image.revision: "${GIT_SHA?error}"
+  org.opencontainers.image.version: "${APP_VERSION?error}"
+
+x-defaults: &defaults
+  user: "1000"
+  group_add:
+    - video # 44
+    - 132 # render
+  devices:
+    - /dev/dri/renderD129:/dev/dri/renderD129
+    - /dev/kfd:/dev/kfd
+  volumes:
+    - ./outputs/:/outputs
+    - /mnt/tank/models:/models:ro
+
+services:
+  sdcpp-rocm64-gfx1030:
+    <<: *defaults
+    build:
+      dockerfile: Dockerfile.rocm
+      args:
+        APP_VERSION: ${APP_VERSION}
+        ROCM_VERSION: "6.4.4"
+        GFX_NAME: gfx1030
+        HSA_OVERRIDE_GFX_VERSION: 10.3.0
+      labels: *labels
+      tags:
+        - "sdcpp:${APP_VERSION}-rocm6.4-gfx1030"
+    image: sdcpp:rocm6.4-gfx1030
+
+  sdcpp-rocm70-gfx1030:
+    <<: *defaults
+    build:
+      dockerfile: Dockerfile.rocm
+      args:
+        APP_VERSION: ${APP_VERSION}
+        ROCM_VERSION: "7.0"
+        GFX_NAME: gfx1030
+        HSA_OVERRIDE_GFX_VERSION: 10.3.0
+      labels: *labels
+      tags:
+        - "sdcpp:${APP_VERSION}-rocm7.0-gfx1030"
+    image: sdcpp:rocm7.0-gfx1030
+
+  sdcpp-rocm63-gfx900:
+    <<: *defaults
+    build:
+      dockerfile: Dockerfile.rocm
+      args:
+        APP_VERSION: ${APP_VERSION}
+        ROCM_VERSION: "6.3.4"
+        GFX_NAME: gfx900
+        HSA_OVERRIDE_GFX_VERSION: 9.0.0
+      labels: *labels
+      tags:
+        - "sdcpp:${APP_VERSION}-rocm6.3-gfx900"
+    image: sdcpp:rocm6.3-gfx900
+
+  sdcpp-vulkan:
+    <<: *defaults
+    build:
+      dockerfile: Dockerfile.vulkan
+      labels: *labels
+      tags:
+        - "sdcpp:${APP_VERSION}-vulkan"
+    image: sdcpp:vulkan
+    devices:
+      - /dev/dri/renderD129:/dev/dri/renderD129
+    volumes:
+      - ./.cache/:/.cache # shader cache
+      - ./outputs/:/outputs
+      - /mnt/tank/models:/models:ro
