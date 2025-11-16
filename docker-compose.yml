@@ -45,6 +45,20 @@ services:
         - "sdcpp:${APP_VERSION}-rocm7.0-gfx1030"
     image: sdcpp:rocm7.0-gfx1030
 
+  sdcpp-rocm71-gfx1030:
+    <<: *defaults
+    build:
+      dockerfile: Dockerfile.rocm
+      args:
+        APP_VERSION: ${APP_VERSION}
+        ROCM_VERSION: "7.1.1"
+        GFX_NAME: gfx1030
+        HSA_OVERRIDE_GFX_VERSION: 10.3.0
+      labels: *labels
+      tags:
+        - "sdcpp:${APP_VERSION}-rocm7.1-gfx1030"
+    image: sdcpp:rocm7.1-gfx1030
+
   sdcpp-rocm63-gfx900:
     <<: *defaults
     build:
