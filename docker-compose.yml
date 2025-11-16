@@ -37,7 +37,7 @@ services:
       dockerfile: Dockerfile.rocm
       args:
         APP_VERSION: ${APP_VERSION}
-        ROCM_VERSION: "7.0"
+        ROCM_VERSION: "7.0.2"
         GFX_NAME: gfx1030
         HSA_OVERRIDE_GFX_VERSION: 10.3.0
       labels: *labels
