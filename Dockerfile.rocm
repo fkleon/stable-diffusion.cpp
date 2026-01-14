@@ -34,6 +34,6 @@ ARG HSA_OVERRIDE_GFX_VERSION
 ENV HSA_OVERRIDE_GFX_VERSION=$HSA_OVERRIDE_GFX_VERSION
 ENV LD_LIBRARY_PATH=/opt/rocm/lib/llvm/lib
 
-COPY --from=build /sd.cpp/build/bin/sd /sd
+COPY --from=build /sd.cpp/build/bin/sd-cli /sd-cli
 
-ENTRYPOINT ["/sd"]
+ENTRYPOINT ["/sd-cli"]
